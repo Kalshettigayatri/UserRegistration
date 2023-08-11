@@ -1,67 +1,72 @@
 ﻿using System;
 
-namespace UserRegistration
+using System;
+using System.Text.RegularExpressions;
+
+class Program
 {
-    class Program
+    static bool ValidateEmail(string email)
     {
-        static void Main(string[] args)
+        // Define the regular expression pattern for a valid email address
+        string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+
+        // Use Regex.IsMatch to check if the email matches the pattern
+        if (Regex.IsMatch(email, pattern))
         {
-            Console.WriteLine("User Registration Form");
-
-            Console.Write("Enter First Name: ");
-            string firstName = Console.ReadLine();
-
-            Console.Write("Enter Last Name: ");
-            string lastName = Console.ReadLine();
-
-            Console.Write("Enter Email: ");
-            string email = Console.ReadLine();
-
-            Console.Write("Enter Mobile Number: ");
-            string mobile = Console.ReadLine();
-
-            Console.Write("Enter Password: ");
-            string password = Console.ReadLine();
-
-            if (UserValidator.IsValidFirstName(firstName) &&
-                UserValidator.IsValidLastName(lastName) &&
-                UserValidator.IsValidEmail(email) &&
-                UserValidator.IsValidMobileNumber(mobile) &&
-                UserValidator.IsValidPassword(password))
-            {
-                Console.WriteLine("Registration Successful!");
-            }
-            else
-            {
-                Console.WriteLine("Registration Failed. Please check your details.");
-            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    public static class UserValidator
+    static void Main()
     {
-        public static Func<string, bool> IsValidFirstName = firstName =>
-            !string.IsNullOrWhiteSpace(firstName) && firstName.Length >= 3;
-
-        public static Func<string, bool> IsValidLastName = lastName =>
-            !string.IsNullOrWhiteSpace(lastName) && lastName.Length >= 3;
-
-        public static Func<string, bool> IsValidEmail = email =>
-        {
-            
-            return true;
+        string[] validEmails = {
+            "abc@yahoo.com",
+            "abc-100@yahoo.com",
+            "abc.100@yahoo.com",
+            "abc111@abc.com",
+            "abc-100@abc.net",
+            "abc.100@abc.com.au",
+            "abc@1.com",
+            "abc@gmail.com.com",
+            "abc+100@gmail.com"
         };
 
-        public static Func<string, bool> IsValidMobileNumber = mobile =>
-        {
-         
-            return true;
+        string[] invalidEmails = {
+            "abc",
+            "abc@.com.my",
+            "abc123@gmail.a",
+            "abc123@.com",
+            "abc123@.com.com",
+            ".abc@abc.com",
+            "abc()*@gmail.com",
+            "abc@%*.com",
+            "abc..2002@gmail.com",
+            "abc.@gmail.com",
+            "abc@abc@gmail.com",
+            "abc@gmail.com.1a",
+            "abc@gmail.com.aa.au"
         };
 
-        public static Func<string, bool> IsValidPassword = password =>
+        Console.WriteLine("Valid Emails:");
+        foreach (string email in validEmails)
         {
-            
-            return true;
-        };
+            if (ValidateEmail(email))
+            {
+                Console.WriteLine($"- {email}");
+            }
+        }
+
+        Console.WriteLine("\nInvalid Emails:");
+        foreach (string email in invalidEmails)
+        {
+            if (!ValidateEmail(email))
+            {
+                Console.WriteLine($"- {email}");
+            }
+        }
     }
 }
